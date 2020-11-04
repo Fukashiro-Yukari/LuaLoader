@@ -1,7 +1,6 @@
 command = {}
-command.__commands = command.__commands or {}
 
-local commands = command.__commands
+local commands = {}
 
 function command.Add(n,f)
     if not isstring(n) or commands[n] then return end

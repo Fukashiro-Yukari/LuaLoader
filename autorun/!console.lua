@@ -97,7 +97,7 @@ hook.Add('OnGUI','!!!!!!LuaLoaderLog',function()
 
         GUI.color = t.color
 
-        GUI.Label(Rect(x,y,w,25),t.text)
+        GUI.Label(Rect(x,y,w,22),t.text)
 
         GUI.color = Color.white
         y = y+15

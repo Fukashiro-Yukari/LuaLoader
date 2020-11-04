@@ -149,7 +149,7 @@ namespace LuaLoader
                 old(table.concat(r,'  '))
             end
 
-            print = Print2
+            print = Print
          ";
         public string luacode2 = "import('LuaLoader');import('LuaLoader','LuaLoader.Config')";
         public string luacode3 = "package.path = '" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.lua;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/bin/?.dll;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.luac'";

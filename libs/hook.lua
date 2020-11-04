@@ -1,7 +1,10 @@
 hook = {}
-hook.__hooks = hook.__hooks or {}
 
-local hooks = hook.__hooks
+local hooks = {}
+
+function hook.GetTable()
+    return hooks
+end
 
 function hook.Add(name,id,func)
     if not isfunction(func) or not isstring(name) then return end
