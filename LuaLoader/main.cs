@@ -2,7 +2,7 @@
 using System.Text;
 using System.IO;
 using System.Reflection;
-using NLua;
+using XLua;
 using MelonLoader;
 using LuaLoader.Config;
 using LuaLoader.UI;
@@ -48,24 +48,33 @@ namespace LuaLoader
             ForceUnlockCursor.UpdateCursorControl();
         }
 
-        public static Lua CreateLua()
+        //public static Lua CreateLua()
+        //{
+        //    var nlua = new Lua();
+
+        //    nlua.State.Encoding = Encoding.UTF8;
+        //    nlua["test"] = "test";
+        //    nlua.LoadCLRPackage();
+        //    nlua.RegisterFunction("Print", null, typeof(Loader).GetMethod("Print"));
+        //    nlua.RegisterFunction("Print2", null, typeof(Loader).GetMethod("Print2"));
+
+        //    var obj = new LuaLoader();
+
+        //    nlua.RegisterFunction("ReloadLua", obj, obj.GetType().GetMethod("ReloadLua"));
+        //    nlua.DoString(LuaLoader.Instance.luacode2);
+        //    nlua.DoString(LuaLoader.Instance.luacode3);
+        //    nlua.DoString(LuaLoader.Instance.luacode);
+
+        //    return nlua;
+        //}
+
+        public static LuaEnv CreateLua()
         {
-            var nlua = new Lua();
+            var xlua = new XLua.LuaEnv();
 
-            nlua.State.Encoding = Encoding.UTF8;
-            nlua["test"] = "test";
-            nlua.LoadCLRPackage();
-            nlua.RegisterFunction("Print", null, typeof(Loader).GetMethod("Print"));
-            nlua.RegisterFunction("Print2", null, typeof(Loader).GetMethod("Print2"));
+            //nlua.Global.SetInPath<LuaFunction>("",);
 
-            var obj = new LuaLoader();
-
-            nlua.RegisterFunction("ReloadLua", obj, obj.GetType().GetMethod("ReloadLua"));
-            nlua.DoString(LuaLoader.Instance.luacode2);
-            nlua.DoString(LuaLoader.Instance.luacode3);
-            nlua.DoString(LuaLoader.Instance.luacode);
-
-            return nlua;
+            return xlua;
         }
 
         public static Type GetType(string fullName)
@@ -105,7 +114,7 @@ namespace LuaLoader
 
     public class LuaLoader : MelonMod
     {
-        public static Lua lua;
+        public static LuaTask.LuaEnv lua;
         public static LuaLoader Instance;
         public string luacode = @"
             local old = Print
@@ -143,7 +152,7 @@ namespace LuaLoader
             print = Print2
          ";
         public string luacode2 = "import('LuaLoader');import('LuaLoader','LuaLoader.Config')";
-        public string luacode3 = "package.path = '" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.lua;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/dll/?.dll;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.luac'";
+        public string luacode3 = "package.path = '" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.lua;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/bin/?.dll;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.luac'";
         private static HarmonyInstance harmony;
 
         public override void OnApplicationStart()
@@ -183,7 +192,7 @@ namespace LuaLoader
         {
             try
             {
-                var lr = lua.GetFunction("hook.Call").Call("OnGUIGetString", __result);
+                var lr = lua.lua.GetFunction("hook.Call").Call("OnGUIGetString", __result);
 
                 if (lr.Length > 0 && lr[0] != null)
                 {
@@ -194,7 +203,7 @@ namespace LuaLoader
             {
                 try
                 {
-                    lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
+                    lua.lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
                 }
                 catch (Exception e2)
                 {
@@ -214,13 +223,13 @@ namespace LuaLoader
         {
             try
             {
-                lua.GetFunction("hook.Call").Call("OnLevelWasInitialized", level);
+                lua.lua.GetFunction("hook.Call").Call("OnLevelWasInitialized", level);
             }
             catch (Exception e)
             {
                 try
                 {
-                    lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
+                    lua.lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
                 }
                 catch (Exception e2)
                 {
@@ -235,13 +244,13 @@ namespace LuaLoader
         {
             try
             {
-                lua.GetFunction("hook.Call").Call("OnLevelWasLoaded", level);
+                lua.lua.GetFunction("hook.Call").Call("OnLevelWasLoaded", level);
             }
             catch (Exception e)
             {
                 try
                 {
-                    lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
+                    lua.lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
                 }
                 catch (Exception e2)
                 {
@@ -291,13 +300,13 @@ namespace LuaLoader
         {
             try
             {
-                lua.GetFunction("hook.Call").Call(s);
+                lua.lua.GetFunction("hook.Call").Call(s);
             }
             catch (Exception e)
             {
                 try
                 {
-                    lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
+                    lua.lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
                 }
                 catch (Exception e2)
                 {
@@ -317,9 +326,9 @@ namespace LuaLoader
 
             foreach (var f in Directory.GetFiles(dir))
             {
-                var ftype = f.Split('.');
+                var fext = Path.GetExtension(f);
 
-                if (ftype.Length < 2 || ftype[1] != "lua") continue;
+                if (fext != ".lua") continue;
 
                 MelonLogger.Log("Lua Loading: " + f);
 
@@ -331,7 +340,7 @@ namespace LuaLoader
                 {
                     try
                     {
-                        lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
+                        lua.lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
                     }
                     catch (Exception e2)
                     {
@@ -345,17 +354,18 @@ namespace LuaLoader
 
         public void InitLua()
         {
-            lua = new Lua();
+            lua = new LuaTask.LuaEnv();
             //lua = new LuaEnv();
-            lua.State.Encoding = Encoding.UTF8;
-            lua["test"] = "test";
-            lua.LoadCLRPackage();
-            lua.RegisterFunction("Print", null, typeof(Loader).GetMethod("Print"));
-            lua.RegisterFunction("Print2", null, typeof(Loader).GetMethod("Print2"));
+            lua.lua.State.Encoding = Encoding.UTF8;
+            lua.lua["test"] = "test";
+            lua.lua.LoadCLRPackage();
+            lua.lua.RegisterFunction("Print", null, typeof(Loader).GetMethod("Print"));
+            lua.lua.RegisterFunction("Print2", null, typeof(Loader).GetMethod("Print2"));
 
             var obj = new LuaLoader();
 
-            lua.RegisterFunction("ReloadLua", obj, obj.GetType().GetMethod("ReloadLua"));
+            lua.lua.RegisterFunction("ReloadLua", obj, obj.GetType().GetMethod("ReloadLua"));
+            lua.lua.RegisterFunction("LoadLuaFile", obj, obj.GetType().GetMethod("LoadLuaFile"));
             lua.DoString(luacode2);
             lua.DoString(luacode3);
             lua.DoString(luacode);
@@ -384,6 +394,38 @@ namespace LuaLoader
             MelonLogger.Log("Lua Reloading");
             LoadingLua();
             MelonLogger.Log("Lua Reloading Complete");
+        }
+
+        public object[] LoadLuaFile(string name)
+        {
+            object[] result = null;
+
+            try
+            {
+                var fext = Path.GetExtension(name);
+
+                if (fext == ".lua")
+                {
+                    MelonLogger.Log("Lua Loading: " + name);
+
+                    return lua.DoFile(name);
+                }
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    lua.lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
+                }
+                catch (Exception e2)
+                {
+                    MelonLogger.LogError(e2.ToString());
+                }
+
+                MelonLogger.LogError(e.ToString());
+            }
+
+            return result;
         }
     }
 }
