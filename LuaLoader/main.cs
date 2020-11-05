@@ -48,33 +48,59 @@ namespace LuaLoader
             ForceUnlockCursor.UpdateCursorControl();
         }
 
-        //public static Lua CreateLua()
-        //{
-        //    var nlua = new Lua();
-
-        //    nlua.State.Encoding = Encoding.UTF8;
-        //    nlua["test"] = "test";
-        //    nlua.LoadCLRPackage();
-        //    nlua.RegisterFunction("Print", null, typeof(Loader).GetMethod("Print"));
-        //    nlua.RegisterFunction("Print2", null, typeof(Loader).GetMethod("Print2"));
-
-        //    var obj = new LuaLoader();
-
-        //    nlua.RegisterFunction("ReloadLua", obj, obj.GetType().GetMethod("ReloadLua"));
-        //    nlua.DoString(LuaLoader.Instance.luacode2);
-        //    nlua.DoString(LuaLoader.Instance.luacode3);
-        //    nlua.DoString(LuaLoader.Instance.luacode);
-
-        //    return nlua;
-        //}
-
-        public static LuaEnv CreateLua()
+        public static object[] RunXLuaCode(string code,NLua.LuaTable table = null)
         {
-            var xlua = new XLua.LuaEnv();
+            var xlua = new LuaEnv();
 
-            //nlua.Global.SetInPath<LuaFunction>("",);
+            try
+            {
+                object[] ret;
 
-            return xlua;
+                xlua.DoString(LuaLoader.Instance.luacode4, "XLua Init");
+                xlua.DoString(LuaLoader.Instance.luacode5, "XLua Init");
+                xlua.DoString("NLua = {}", "XLua Init");
+                xlua.DoString("require('main')", "XLua Init");
+
+                if (table != null)
+                {
+                    var keys = table.Keys;
+                    var vels = table.Values;
+                    var keysa = new object[keys.Count];
+                    var velsa = new object[vels.Count];
+
+                    keys.CopyTo(keysa, 0);
+                    vels.CopyTo(velsa, 0);
+
+                    for (var i = 0; i < keysa.Length; i++)
+                    {
+                        var k = keysa[i];
+                        var v = velsa[i];
+
+                        xlua.Global.SetInPath("NLua."+k.ToString(), v);
+                    }
+                }
+
+                ret = xlua.DoString(code, "XLua Run Lua Code");
+
+                xlua.Dispose();
+
+                return ret;
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    LuaLoader.lua.lua.GetFunction("hook.Call").Call("OnLuaError", e.ToString());
+                }
+                catch (Exception e2)
+                {
+                    MelonLogger.LogError(e2.ToString());
+                }
+
+                MelonLogger.LogError(e.ToString());
+            }
+
+            return null;
         }
 
         public static Type GetType(string fullName)
@@ -91,24 +117,6 @@ namespace LuaLoader
             }
 
             return null;
-        }
-    }
-
-    class ents
-    {
-        public static UnityEngine.Object GetPlayer()
-        {
-            return UnityEngine.Object.FindObjectOfType<Player>();
-        }
-
-        public static UnityEngine.Object[] GetPlayers()
-        {
-            return UnityEngine.Object.FindObjectsOfType<Player>();
-        }
-
-        public static Type GetPlayerType()
-        {
-            return typeof(Player);
         }
     }
 
@@ -153,6 +161,22 @@ namespace LuaLoader
          ";
         public string luacode2 = "import('LuaLoader');import('LuaLoader','LuaLoader.Config')";
         public string luacode3 = "package.path = '" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.lua;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/bin/?.dll;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.luac'";
+        public string luacode4 = "package.path = '" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/xlua/?.lua;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/bin/?.dll;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/xlua/?.luac'";
+        public string luacode5 = @"
+            function print(...)
+                local r = {}
+            
+                for i = 1,select('#',...) do
+                    table.insert(r,tostring(select(i,...)))
+                end
+            
+                if #r == 0 then
+                    table.insert(r,'nil')
+                end
+            
+                CS.MelonLoader.MelonLogger.Log(table.concat(r,'  '))
+            end
+        ";
         private static HarmonyInstance harmony;
 
         public override void OnApplicationStart()

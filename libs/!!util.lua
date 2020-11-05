@@ -83,7 +83,7 @@ function pass(a)
     return pass
 end
 
-function tablefunc(a,b,c)
+function switch(a,b,c)
     b = b or {}
 	c = c or function() end
 	setmetatable(b,{__index = function(t,k) return c end})
@@ -109,6 +109,14 @@ function typeof(o)
     s = string.gsub(s,'%)','')
 
     return Loader.GetType(s)
+end
+
+function xluatypeof(o) -- The result is the same as typeof, it doesn't seem to make any sense
+	return unpack(Loader.RunXLuaCode([[
+		return typeof(NLua.obj)
+	]],{
+		obj = o
+	}))
 end
 
 function cpairs(t)
