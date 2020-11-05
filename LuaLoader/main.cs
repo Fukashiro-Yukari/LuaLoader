@@ -208,7 +208,7 @@ namespace LuaLoader
             }
             catch (Exception e)
             {
-                MelonLogger.LogError($"FAIL! : Patched {type.Name}\n{e.ToString()}");
+                MelonLogger.LogError($"FAIL! : Patched {type.Name}\n{e}");
             }
         }
 
