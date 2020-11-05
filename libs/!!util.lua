@@ -113,7 +113,7 @@ end
 
 function xluatypeof(o) -- The result is the same as typeof, it doesn't seem to make any sense
 	return unpack(Loader.RunXLuaCode([[
-		return typeof(NLua.obj)
+		return typeof(nlua.obj)
 	]],{
 		obj = o
 	}))

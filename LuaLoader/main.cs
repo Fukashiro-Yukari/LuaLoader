@@ -18,7 +18,7 @@ namespace LuaLoader
         public const string Description = "Allow the game to run lua language"; // Description for the Mod.  (Set as null if none)
         public const string Author = "NepQ Neko"; // Author of the Mod.  (Set as null if none)
         public const string Company = null; // Company that made the Mod.  (Set as null if none)
-        public const string Version = "0.1"; // Version of the Mod.  (MUST BE SET)
+        public const string Version = "1.111"; // Version of the Mod.  (MUST BE SET)
         public const string DownloadLink = null; // Download Link for the Mod.  (Set as null if none)
     }
 
@@ -58,7 +58,7 @@ namespace LuaLoader
 
                 xlua.DoString(LuaLoader.Instance.luacode4, "XLua Init");
                 xlua.DoString(LuaLoader.Instance.luacode5, "XLua Init");
-                xlua.DoString("NLua = {}", "XLua Init");
+                xlua.DoString("nlua = {}", "XLua Init");
                 xlua.DoString("require('main')", "XLua Init");
 
                 if (table != null)
@@ -76,7 +76,7 @@ namespace LuaLoader
                         var k = keysa[i];
                         var v = velsa[i];
 
-                        xlua.Global.SetInPath("NLua."+k.ToString(), v);
+                        xlua.Global.SetInPath("nlua." + k.ToString(), v);
                     }
                 }
 
