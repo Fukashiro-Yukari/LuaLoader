@@ -7,12 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaLoader", "LuaLoader\LuaL
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
+		Debug Il2CPP|Any CPU = Debug Il2CPP|Any CPU
+		Debug momo|Any CPU = Debug momo|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug Il2CPP|Any CPU.ActiveCfg = Debug Il2CPP|Any CPU
+		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug Il2CPP|Any CPU.Build.0 = Debug Il2CPP|Any CPU
+		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug momo|Any CPU.ActiveCfg = Debug momo|Any CPU
+		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug momo|Any CPU.Build.0 = Debug momo|Any CPU
 		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

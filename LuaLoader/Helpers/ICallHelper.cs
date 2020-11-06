@@ -1,6 +1,4 @@
-﻿#define CPP
-
-#if CPP
+﻿#if CPP
 using System;
 using System.Collections.Generic;
 using System.Linq;

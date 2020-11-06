@@ -1,6 +1,4 @@
-﻿#define CPP
-
-using System;
+﻿using System;
 using System.Reflection;
 using UnityEngine;
 using LuaLoader.Input;

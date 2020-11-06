@@ -9,6 +9,9 @@ using LuaLoader.UI;
 using Harmony;
 using UnityEngine;
 using UnityEngine.UI;
+#if CPP
+using UnhollowerRuntimeLib;
+#endif
 
 namespace LuaLoader
 {
@@ -120,6 +123,42 @@ namespace LuaLoader
         }
     }
 
+    class ents
+    {
+        public static object FindObjectOfType(Type type)
+        {
+#if CPP
+            var e = UnityEngine.Object.FindObjectOfType(Il2CppType.From(type));
+
+            return e.Il2CppCast(type);
+#else
+            return UnityEngine.Object.FindObjectOfType(type);
+#endif
+        }
+
+        public static object FindObjectsOfType(Type type)
+        {
+#if CPP
+            var a = UnityEngine.Object.FindObjectsOfType(Il2CppType.From(type));
+            var ret = new object[a.Length];
+
+            for (var i = 0;i < ret.Length; i++)
+            {
+                ret[i] = a[i].Il2CppCast(type);
+            }
+
+            return ret;
+#else
+            return UnityEngine.Object.FindObjectsOfType(type);
+#endif
+        }
+
+        //public static <T> Test()
+        //{
+        //    return UnityEngine.Object.FindObjectsOfType<VRCPlayer>();
+        //}
+    }
+
     public class LuaLoader : MelonMod
     {
         public static LuaTask.LuaEnv lua;
@@ -159,7 +198,7 @@ namespace LuaLoader
 
             print = Print
          ";
-        public string luacode2 = "import('LuaLoader');import('LuaLoader','LuaLoader.Config')";
+        public string luacode2 = "import('LuaLoader');import('LuaLoader','LuaLoader.Config');import('LuaLoader','LuaLoader.Helpers')";
         public string luacode3 = "package.path = '" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.lua;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/bin/?.dll;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/modules/?.luac'";
         public string luacode4 = "package.path = '" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/xlua/?.lua;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/bin/?.dll;" + Directory.GetCurrentDirectory().Replace("\\", "/") + "/Mods/LuaLoader/xlua/?.luac'";
         public string luacode5 = @"
