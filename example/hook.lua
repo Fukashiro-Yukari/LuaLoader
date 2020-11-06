@@ -20,7 +20,10 @@ end)
 -- Update hook
 
 hook.Add('OnUpdate','Example',function()
-    -- Do something
+    -- If f1 is pressed, it will trigger
+    if InputManager.GetKeyDown(KeyCode.F1) then
+        -- Do something
+    end
 end)
 
 -- Call when the level is loaded
