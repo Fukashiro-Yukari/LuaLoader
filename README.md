@@ -10,6 +10,3 @@ The loader will first load all lua files in the libs folder, and then load the f
 
 * lua - Run lua string
 * lua_reload - Reload lua
-
-<!-- ## How to start -->
-
