@@ -1,4 +1,4 @@
--- The VRPlayer is the player entity in VRChat
+-- The VRCPlayer is the player entity in VRChat
 
 local e = Object.FindObjectOfType(Il2CppType.From(typeof(VRCPlayer)))
 
