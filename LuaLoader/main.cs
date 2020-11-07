@@ -21,7 +21,7 @@ namespace LuaLoader
         public const string Description = "Allow the game to run lua language"; // Description for the Mod.  (Set as null if none)
         public const string Author = "NepQ Neko"; // Author of the Mod.  (Set as null if none)
         public const string Company = null; // Company that made the Mod.  (Set as null if none)
-        public const string Version = "1.111"; // Version of the Mod.  (MUST BE SET)
+        public const string Version = "1.12"; // Version of the Mod.  (MUST BE SET)
         public const string DownloadLink = null; // Download Link for the Mod.  (Set as null if none)
     }
 
@@ -34,7 +34,7 @@ namespace LuaLoader
 
         public static void Print2(string s)
         {
-            Console.WriteLine("[Lua Print] "+s);
+            Console.WriteLine("[Lua Print] " + s);
         }
 
         public static bool ShowMouse
@@ -51,7 +51,7 @@ namespace LuaLoader
             ForceUnlockCursor.UpdateCursorControl();
         }
 
-        public static object[] RunXLuaCode(string code,NLua.LuaTable table = null)
+        public static object[] RunXLuaCode(string code, NLua.LuaTable table = null)
         {
             var xlua = new LuaEnv();
 
@@ -121,6 +121,33 @@ namespace LuaLoader
 
             return null;
         }
+
+        //public static void HarmonyPatch(MethodBase method, LuaFunction prefix = null, LuaFunction postfix = null, LuaFunction tr = null)
+        //{
+        //    if (prefix != null)
+        //    {
+        //        LuaLoader.luaprefix.Add(prefix);
+        //    }
+            
+        //    if (postfix != null)
+        //    {
+        //        LuaLoader.luapostfix.Add(postfix);
+        //    }
+
+        //    if (tr != null)
+        //    {
+        //        LuaLoader.luatrfix.Add(tr);
+        //    }
+
+        //    try
+        //    {
+        //        LuaLoader.harmony.Patch(method, new HarmonyMethod(typeof(LuaLoader).GetMethod(nameof(LuaLoader.LuaPatchPrefix))), new HarmonyMethod(typeof(LuaLoader).GetMethod(nameof(LuaLoader.LuaPatchPostfix))), new HarmonyMethod(typeof(LuaLoader).GetMethod(nameof(LuaLoader.LuaPatchTrfix))));
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        MelonLogger.LogError(e.ToString());
+        //    }
+        //}
     }
 
     class ents
@@ -152,11 +179,6 @@ namespace LuaLoader
             return UnityEngine.Object.FindObjectsOfType(type);
 #endif
         }
-
-        //public static <T> Test()
-        //{
-        //    return UnityEngine.Object.FindObjectsOfType<VRCPlayer>();
-        //}
     }
 
     public class LuaLoader : MelonMod
@@ -217,10 +239,14 @@ namespace LuaLoader
             end
         ";
         private static HarmonyInstance harmony;
+        //public static LuaFunction[] luaprefix;
+        //public static LuaFunction[] luapostfix;
+        //public static LuaFunction[] luatrfix;
 
         public override void OnApplicationStart()
         {
             Instance = this;
+            harmony = HarmonyInstance.Create("LuaLoader.Patch");
 
             config.OnLoad();
             InputManager.Init();
@@ -231,7 +257,6 @@ namespace LuaLoader
             PostLua();
             MelonLogger.Log("Lua Loading Complete");
 
-            harmony = HarmonyInstance.Create("LuaLoader.StringHook");
             PatchIt(typeof(Text));
             PatchIt(typeof(TextMesh));
 
@@ -276,6 +301,51 @@ namespace LuaLoader
                 MelonLogger.LogError(e.ToString());
             }
         }
+
+        //public static void LuaPatchPrefix(ref object __result, params object[] objs)
+        //{
+        //    foreach (var f in luaprefix)
+        //    {
+        //        var r = f.Call(__result, objs);
+
+        //        if (r.Length > 0 && r[0] != null)
+        //        {
+        //            __result = r[0];
+
+        //            break;
+        //        }
+        //    }
+        //}
+
+        //public static void LuaPatchPostfix(ref object __result, params object[] objs)
+        //{
+        //    foreach (var f in luapostfix)
+        //    {
+        //        var r = f.Call(__result, objs);
+
+        //        if (r.Length > 0 && r[0] != null)
+        //        {
+        //            __result = r[0];
+
+        //            break;
+        //        }
+        //    }
+        //}
+
+        //public static void LuaPatchTrfix(ref object __result, params object[] objs)
+        //{
+        //    foreach (var f in luatrfix)
+        //    {
+        //        var r = f.Call(__result, objs);
+
+        //        if (r.Length > 0 && r[0] != null)
+        //        {
+        //            __result = r[0];
+
+        //            break;
+        //        }
+        //    }
+        //}
 
         public override void OnApplicationQuit()
         {
