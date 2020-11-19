@@ -62,7 +62,7 @@ hook.Add('OnUpdate','AutoReboot',function()
                 local old = {}
 
                 if auto then
-                    for k,v in pairs(auto.inittable) do
+                    for k,v in pairs(table.copy(auto.inittable)) do
                         old[k] = _G[k]
                         _G[k] = v
                     end

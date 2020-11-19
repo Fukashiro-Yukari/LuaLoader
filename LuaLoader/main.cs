@@ -2,6 +2,8 @@
 using System.Text;
 using System.IO;
 using System.Reflection;
+using System.CodeDom.Compiler;
+using Microsoft.CSharp;
 using XLua;
 using MelonLoader;
 using LuaLoader.Config;
@@ -104,6 +106,62 @@ namespace LuaLoader
             }
 
             return null;
+        }
+
+        public static Assembly RunCSCode(string code, NLua.LuaTable range = null)
+        {
+            var par = new CompilerParameters() // [Error] System.PlatformNotSupportedException: Operation is not supported on this platform. (In Superliminal game)
+            {
+                GenerateExecutable = false,
+                GenerateInMemory = true
+            };
+
+            par.ReferencedAssemblies.Add("system.dll");
+            par.ReferencedAssemblies.Add("system.data.dll");
+            par.ReferencedAssemblies.Add("system.xml.dll");
+
+            if (range != null)
+            {
+                var ranges = new string[range.Values.Count];
+
+                range.Values.CopyTo(ranges, 0);
+
+                par.ReferencedAssemblies.AddRange(ranges);
+            }
+
+            MelonLogger.Log("test 3");
+
+            var comp = new CSharpCodeProvider();
+
+            MelonLogger.Log("test 4");
+            MelonLogger.Log("test 5");
+
+            var res = comp.CompileAssemblyFromSource(par, code);
+
+            MelonLogger.Log("test 6");
+
+            if (res.Errors.HasErrors)
+            {
+                var errors = new StringBuilder();
+
+                foreach (CompilerError err in res.Errors)
+                {
+                    errors.Append($"{err.FileName}({err.Line},{err.Column}): error {err.ErrorNumber}: {err.ErrorText}");
+                }
+
+                try
+                {
+                    LuaLoader.lua.lua.GetFunction("hook.Call").Call("OnLuaError", errors.ToString());
+                }
+                catch (Exception e2)
+                {
+                    MelonLogger.LogError(e2.ToString());
+                }
+
+                MelonLogger.LogError(errors.ToString());
+            }
+
+            return res.CompiledAssembly;
         }
 
         public static Type GetType(string fullName)
@@ -261,6 +319,8 @@ namespace LuaLoader
             PatchIt(typeof(TextMesh));
 
             LuaCall("OnApplicationStart");
+
+            //Loader.RunCSCode("");
         }
 
         private static void PatchIt(Type type)
