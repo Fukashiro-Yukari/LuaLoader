@@ -58,6 +58,9 @@
     <IsCpp>false</IsCpp>
   </PropertyGroup>
   <ItemGroup Condition="'$(IsCpp)' == 'true'">
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(CppGameFolder)\MelonLoader\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(CppGameFolder)\MelonLoader\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
