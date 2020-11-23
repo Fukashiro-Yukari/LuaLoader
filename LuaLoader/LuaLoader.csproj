@@ -133,7 +133,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="XLua.Mini">
-      <HintPath>..\XLua.Mini.dll</HintPath>
+      <HintPath>..\Libs\XLua.Mini.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
