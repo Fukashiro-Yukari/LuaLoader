@@ -14,23 +14,35 @@ end
 local function buildargs(argt)
     if !istable(argt) then return '' end
 
-    local rs = ','
+    local rs = ''
+    local argtype
 
     if table.count(argt) < 1 then return '' end
     
     for k,v in pairs(argt) do
+        if k == '__result' then
+            if !string.find(v,'ref ') then
+                argtype = v
+                v = 'ref '..v
+            else
+                local tv = string.sub(tv,4,#tv)
+
+                argtype = tv
+            end
+        end
+
         rs = rs..v..' '..k..','
     end
 
     rs = string.sub(rs,1,#rs-1)
 
-    return rs
+    return rs,argtype
 end
 
 local function buildargs2(argt)
     if !istable(argt) then return '' end
 
-    local rs = ','
+    local rs = ''
 
     if table.count(argt) < 1 then return '' end
     
@@ -43,21 +55,20 @@ local function buildargs2(argt)
     return rs
 end
 
-function LuaHarmony.PatchPrefix(n,mn,id,prefix,argtype,argt,dt)
+function LuaHarmony.PatchPrefix(n,mn,id,prefix,argt,dt)
     local rs = util.GetRandomStringNoNum(6)
 
     n = util.GetClassFullName(n) or n
     dt = dt or {}
     prefix = prefix or function() end
 
-    local sargt = buildargs(argt)
+    local sargt,argtype = buildargs(argt)
     local sargt2 = buildargs2(argt)
 
     assert(n,'Need Class Name')
     assert(isstring(n),'Class Name must be a string')
     assert(isstring(mn),'Method Name must be a string')
     assert(isstring(id),'ID must be a string')
-    assert(isstring(argtype),'__result type must be a string')
 
     Patchs.prefix[id] = prefix
     
@@ -70,6 +81,13 @@ function LuaHarmony.PatchPrefix(n,mn,id,prefix,argtype,argt,dt)
     for k,v in pairs(dt) do
         dlllist[#dlllist+1] = v
     end
+
+    local __resultcode = string.format([[
+        if (hr.Length > 0 && hr[0] != null)
+        {
+            __result = (%s)hr[0];
+        }
+    ]],argtype or '')
 
     local cs = Loader.RunCSCode(string.format([[
         using System;
@@ -95,18 +113,15 @@ function LuaHarmony.PatchPrefix(n,mn,id,prefix,argtype,argt,dt)
                     }
                 }
 
-                public static void Prefix(ref %s __result%s)
+                public static void Prefix(%s)
                 {
-                    var hr = LuaLoader.LuaLoader.lua.lua.GetFunction("LuaHarmony.Call").Call("%s", 1, __result%s);
+                    var hr = LuaLoader.LuaLoader.lua.lua.GetFunction("LuaHarmony.Call").Call("%s", 1, %s);
 
-                    if (hr.Length > 0 && hr[0] != null)
-                    {
-                        __result = (%s)hr[0];
-                    }
+                    %s
                 }
             }
         }
-    ]],rs,id,n,mn,argtype,sargt,id,sargt2,argtype),dlllist)
+    ]],rs,id,n,mn,sargt,id,sargt2,argtype and __resultcode or ''),dlllist)
 
     if !cs then return end
 
@@ -115,21 +130,20 @@ function LuaHarmony.PatchPrefix(n,mn,id,prefix,argtype,argt,dt)
     csi:GetType():GetMethod('run'):Invoke(csi,nil)
 end
 
-function LuaHarmony.PatchPostfix(n,mn,id,postfix,argtype,argt,dt)
+function LuaHarmony.PatchPostfix(n,mn,id,postfix,argt,dt)
     local rs = util.GetRandomStringNoNum(6)
 
     n = util.GetClassFullName(n) or n
     dt = dt or {}
     postfix = postfix or function() end
 
-    local sargt = buildargs(argt)
+    local sargt,argtype = buildargs(argt)
     local sargt2 = buildargs2(argt)
 
     assert(n,'Need Class Name')
     assert(isstring(n),'Class Name must be a string')
     assert(isstring(mn),'Method Name must be a string')
     assert(isstring(id),'ID must be a string')
-    assert(isstring(argtype),'__result type must be a string')
 
     Patchs.postfix[id] = postfix
     
@@ -142,6 +156,13 @@ function LuaHarmony.PatchPostfix(n,mn,id,postfix,argtype,argt,dt)
     for k,v in pairs(dt) do
         dlllist[#dlllist+1] = v
     end
+
+    local __resultcode = string.format([[
+        if (hr.Length > 0 && hr[0] != null)
+        {
+            __result = (%s)hr[0];
+        }
+    ]],argtype or '')
 
     local cs = Loader.RunCSCode(string.format([[
         using System;
@@ -159,7 +180,7 @@ function LuaHarmony.PatchPostfix(n,mn,id,postfix,argtype,argt,dt)
                     {
                         var harmony = HarmonyInstance.Create("%s");
 
-                        harmony.Patch(typeof(%s).GetMethod("%s"), null, new HarmonyMethod(typeof(Patch).GetMethod(nameof(Postfix))));
+                        harmony.Patch(typeof(%s).GetMethod("%s"), new HarmonyMethod(typeof(Patch).GetMethod(nameof(Postfix))));
                     }
                     catch (Exception e)
                     {
@@ -167,18 +188,15 @@ function LuaHarmony.PatchPostfix(n,mn,id,postfix,argtype,argt,dt)
                     }
                 }
 
-                public static void Postfix(ref %s __result%s)
+                public static void Postfix(%s)
                 {
-                    var hr = LuaLoader.LuaLoader.lua.lua.GetFunction("LuaHarmony.Call").Call("%s", 2, __result%s);
+                    var hr = LuaLoader.LuaLoader.lua.lua.GetFunction("LuaHarmony.Call").Call("%s", 2, %s);
 
-                    if (hr.Length > 0 && hr[0] != null)
-                    {
-                        __result = (%s)hr[0];
-                    }
+                    %s
                 }
             }
         }
-    ]],rs,id,n,mn,argtype,sargt,id,sargt2,argtype),dlllist)
+    ]],rs,id,n,mn,sargt,id,sargt2,argtype and __resultcode or ''),dlllist)
 
     if !cs then return end
 

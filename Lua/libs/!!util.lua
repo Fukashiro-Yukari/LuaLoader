@@ -250,6 +250,18 @@ function util.GetClassFullName(o)
     return s
 end
 
+function util.GetAllAssembliesPath()
+	local rt = {}
+
+	for k,v in pairs(AppDomain.CurrentDomain:GetAssemblies()) do
+		if v.Location != '' and v.Location != nil then
+			rt[#rt+1] = v.Location
+		end
+	end
+
+	return rt
+end
+
 -- R.I.P module function and setfenv function
 
 -- function module()
