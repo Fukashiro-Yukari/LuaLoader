@@ -28,7 +28,7 @@ namespace LuaLoader
         public const string Description = "Allow the game to run lua language"; // Description for the Mod.  (Set as null if none)
         public const string Author = "NepQ Neko"; // Author of the Mod.  (Set as null if none)
         public const string Company = null; // Company that made the Mod.  (Set as null if none)
-        public const string Version = "1.12"; // Version of the Mod.  (MUST BE SET)
+        public const string Version = "1.121"; // Version of the Mod.  (MUST BE SET)
         public const string DownloadLink = null; // Download Link for the Mod.  (Set as null if none)
     }
 
@@ -700,6 +700,7 @@ namespace LuaLoader
             Instance = this;
             harmony = HarmonyInstance.Create("LuaLoader.Patch");
 
+            //CopyDll();
             config.OnLoad();
             InputManager.Init();
             ForceUnlockCursor.Init();
@@ -713,6 +714,26 @@ namespace LuaLoader
             PatchIt(typeof(TextMesh));
 
             LuaCall("OnApplicationStart");
+        }
+
+        private void CopyDll()
+        {
+#if CPP
+            var path = "MelonLoader/Managed";
+#else
+            var path = "";
+#endif
+            if (!Directory.Exists(path)) return;
+
+            var newpath = "Mods/LuaLoader/Mono/lib/mono/4.5/Managed";
+
+            if (!Directory.Exists(newpath)) Directory.CreateDirectory(newpath);
+
+            foreach (var f in Directory.GetFiles(path,"*.dll"))
+            {
+                File.Delete(Path.Combine(newpath, Path.GetFileName(f)));
+                File.Copy(f, Path.Combine(newpath, Path.GetFileName(f)), true);
+            }
         }
 
         private static void PatchIt(Type type)
@@ -909,7 +930,7 @@ namespace LuaLoader
                 Directory.CreateDirectory(dir);
             }
 
-            foreach (var f in Directory.GetFiles(dir))
+            foreach (var f in Directory.GetFiles(dir, "*.lua"))
             {
                 var fext = Path.GetExtension(f);
 

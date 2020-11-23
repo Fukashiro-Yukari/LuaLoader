@@ -12,3 +12,15 @@ The loader will first load all lua files in the libs folder, and then load the f
 
 * lua - Run lua string
 * lua_reload - Reload lua
+
+# Credits
+
+Written by Neptune QTG.
+
+## Licensing
+
+This project uses code from:
+
+* (GPL) [Sinai](https://github.com/sinai-dev)'s [UnityExplorer](https://github.com/sinai-dev/UnityExplorer), I used the code of Input Manager and Force Unlock Cursor, and the code of Config (because I am a c# noob)
+* (MIT) [Mono](https://github.com/mono/mono), I modified the compiler path to fix the compiled code
+* (MIT) [chenxuuu](https://github.com/chenxuuu)'s [LuaTask-csharp](https://github.com/chenxuuu/LuaTask-csharp), Because the function will cause the game to crash, I want to try to fix it, but it still hasn't been fixed..
