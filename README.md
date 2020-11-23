@@ -13,11 +13,11 @@ The loader will first load all lua files in the libs folder, and then load the f
 * lua - Run lua string
 * lua_reload - Reload lua
 
-# Credits
+## Credits
 
-Written by Neptune QTG.
+Written by NepQ Neko.
 
-## Licensing
+### Licensing
 
 This project uses code from:
 
