@@ -200,7 +200,7 @@ function LuaHarmony.PatchPostfix(n,mn,id,postfix,argt,dt,exargt)
                     {
                         var harmony = HarmonyInstance.Create("%s");
 
-                        harmony.Patch(typeof(%s).GetMethod("%s"), new HarmonyMethod(typeof(Patch).GetMethod(nameof(Postfix))));
+                        harmony.Patch(typeof(%s).GetMethod("%s"), null, new HarmonyMethod(typeof(Patch).GetMethod(nameof(Postfix))));
                     }
                     catch (Exception e)
                     {
