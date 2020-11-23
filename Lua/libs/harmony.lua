@@ -96,7 +96,7 @@ function LuaHarmony.PatchPrefix(n,mn,id,prefix,argt,dt,exargt)
         '../../../../../../MelonLoader/MelonLoader.ModHandler.dll'
     }
 
-    for k,v in pairs(dt) do
+    for k,v in ipairs(dt) do
         dlllist[#dlllist+1] = v
     end
 
@@ -173,7 +173,7 @@ function LuaHarmony.PatchPostfix(n,mn,id,postfix,argt,dt,exargt)
         '../../../../../../MelonLoader/MelonLoader.ModHandler.dll'
     }
 
-    for k,v in pairs(dt) do
+    for k,v in ipairs(dt) do
         dlllist[#dlllist+1] = v
     end
 
