@@ -3,7 +3,7 @@ command = {}
 local commands = {}
 
 function command.Add(n,f)
-    if not isstring(n) or commands[n] then return end
+    if not isstring(n) then return end
 
     commands[n] = f
 end

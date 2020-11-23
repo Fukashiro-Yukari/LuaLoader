@@ -201,8 +201,24 @@ function util.ArrayToTable(o,b)
 	return t
 end
 
+function util.TableToArray(t)
+	return Loader.CreateArray(t)
+end
+
 function util.GetRandomString(len)
     local str = '1234567890abcdefhijklmnopqrstuvwxyz'
+	local ret = ''
+	
+    for i = 1,len do
+        local rchr = math.random(1,string.len(str))
+        ret = ret..string.sub(str,rchr,rchr)
+	end
+	
+    return ret
+end
+
+function util.GetRandomStringNoNum(len)
+    local str = 'abcdefhijklmnopqrstuvwxyz'
 	local ret = ''
 	
     for i = 1,len do
@@ -218,6 +234,20 @@ function util.GetId()
 	idTemp = idTemp+1
 	
     return idTemp
+end
+
+function util.GetClassFullName(o)
+    if !o or !istype(o,'userdata') then return end
+
+    local s = tostring(o)
+
+    s = string.split(s,':')
+    s = s[1]
+    s = string.gsub(s,'ProxyType','')
+    s = string.gsub(s,'%(','')
+    s = string.gsub(s,'%)','')
+
+    return s
 end
 
 -- R.I.P module function and setfenv function
