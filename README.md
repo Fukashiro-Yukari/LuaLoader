@@ -1,10 +1,10 @@
 # Lua Loader
 
-Universal MelonLoader MOD, giving MelonLoader the ability to load Lua language
+Universal MelonLoader MOD, give MelonLoader ability to loading Lua language
 
 Press F10 to switch lua console by default
 
-The loader will first load all lua files in the libs folder, and then load the files in the autorun folder
+The loader will loading all lua files in 'autorun' directory
 
 [Example](https://github.com/Fukashiro-Yukari/LuaLoader/tree/master/example)
 
@@ -18,3 +18,4 @@ The loader will first load all lua files in the libs folder, and then load the f
 This project uses code from:
 
 * (GPL) [Sinai](https://github.com/sinai-dev)'s [UnityExplorer](https://github.com/sinai-dev/UnityExplorer), I used the code of Input Manager and Force Unlock Cursor, and the code of Config
+* (MIT) [Lua](https://www.lua.org/license.html), Contains most of the backwards compatibility (5.4-5.1) and have some garry's mod like stuff.
