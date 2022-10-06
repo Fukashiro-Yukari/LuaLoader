@@ -31,7 +31,7 @@ namespace LuaLoader.Input
 
         public void Init()
         {
-            MelonLoader.MelonLogger.Log("Initializing Legacy Input support...");
+            MelonLoader.MelonLogger.Msg("Initializing Legacy Input support...");
 
             m_mousePositionProp = TInput.GetProperty("mousePosition");
             m_getKeyMethod = TInput.GetMethod("GetKey", new Type[] { typeof(KeyCode) });

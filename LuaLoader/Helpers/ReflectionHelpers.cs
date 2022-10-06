@@ -149,7 +149,7 @@ namespace LuaLoader.Helpers
             }
             catch (Exception e)
             {
-                MelonLoader.MelonLogger.Log(e.GetType() + ", " + e.Message);
+                MelonLoader.MelonLogger.Msg(e.GetType() + ", " + e.Message);
             }
 #endif
             return false;

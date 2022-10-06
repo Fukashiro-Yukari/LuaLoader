@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using UnhollowerBaseLib;
 #endif
 
-namespace LuaLoader
+namespace LuaLoader.LuaClass
 {
     [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Unity style")]
     public static class InputManager
@@ -28,7 +28,7 @@ namespace LuaLoader
 
             if (m_inputModule == null)
             {
-                MelonLoader.MelonLogger.LogWarning("Could not find any Input module!");
+                MelonLoader.MelonLogger.Warning("Could not find any Input module!");
                 m_inputModule = new NoInput();
             }
 

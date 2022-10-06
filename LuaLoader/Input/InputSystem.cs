@@ -86,7 +86,7 @@ namespace LuaLoader.Input
 
         public void Init()
         {
-            MelonLoader.MelonLogger.Log("Initializing new InputSystem support...");
+            MelonLoader.MelonLogger.Msg("Initializing new InputSystem support...");
 
             m_kbCurrentProp = TKeyboard.GetProperty("current");
             m_kbIndexer = TKeyboard.GetProperty("Item", new Type[] { TKey });

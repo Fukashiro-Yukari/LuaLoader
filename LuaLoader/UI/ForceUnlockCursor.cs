@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 using LuaLoader.Helpers;
-using LuaLoader;
+using LuaLoader.LuaClass;
 using BF = System.Reflection.BindingFlags;
-using Harmony;
+using HarmonyLib;
 
 namespace LuaLoader.UI
 {
@@ -58,7 +58,7 @@ namespace LuaLoader.UI
             }
             catch (Exception e)
             {
-                MelonLoader.MelonLogger.Log($"Exception on CursorControl.Init! {e.GetType()}, {e.Message}");
+                MelonLoader.MelonLogger.Warning($"Exception on CursorControl.Init! {e.GetType()}, {e.Message}");
             }
 
             Unlock = true;
@@ -68,7 +68,7 @@ namespace LuaLoader.UI
         {
             try
             {
-                var harmony = LuaLoader.Instance.harmonyInstance;
+                var harmony = LuaLoader.Instance.HarmonyInstance;
                 var prop = typeof(Cursor).GetProperty(property);
 
                 if (setter)
@@ -85,7 +85,7 @@ namespace LuaLoader.UI
             catch (Exception e)
             {
                 string s = setter ? "set_" : "get_" ;
-                MelonLoader.MelonLogger.Log($"Unable to patch Cursor.{s}{property}: {e.Message}");
+                MelonLoader.MelonLogger.Warning($"Unable to patch Cursor.{s}{property}: {e.Message}");
             }
         }
 
@@ -123,7 +123,7 @@ namespace LuaLoader.UI
             }
             catch (Exception e)
             {
-                MelonLoader.MelonLogger.Log($"Exception setting Cursor state: {e.GetType()}, {e.Message}");
+                MelonLoader.MelonLogger.Msg($"Exception setting Cursor state: {e.GetType()}, {e.Message}");
             }
         }
 

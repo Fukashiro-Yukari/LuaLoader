@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30225.117
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuaLoader", "LuaLoader\LuaLoader.csproj", "{9985C0F9-AB5A-4464-8529-2BECAAC9E137}"
 EndProject
@@ -9,15 +9,18 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Il2CPP|Any CPU = Debug Il2CPP|Any CPU
 		Debug Mono|Any CPU = Debug Mono|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Release Il2CPP|Any CPU = Release Il2CPP|Any CPU
+		Release Mono|Any CPU = Release Mono|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug Il2CPP|Any CPU.ActiveCfg = Debug Il2CPP|Any CPU
 		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug Il2CPP|Any CPU.Build.0 = Debug Il2CPP|Any CPU
 		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug Mono|Any CPU.ActiveCfg = Debug Mono|Any CPU
 		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Debug Mono|Any CPU.Build.0 = Debug Mono|Any CPU
-		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Release Il2CPP|Any CPU.ActiveCfg = Release Il2CPP|Any CPU
+		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Release Il2CPP|Any CPU.Build.0 = Release Il2CPP|Any CPU
+		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Release Mono|Any CPU.ActiveCfg = Release Mono|Any CPU
+		{9985C0F9-AB5A-4464-8529-2BECAAC9E137}.Release Mono|Any CPU.Build.0 = Release Mono|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
